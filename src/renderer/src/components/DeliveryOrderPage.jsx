@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import './DeliveryOrderPage.css'; // Importing a CSS file for styles.
 
 const DeliveryOrderPage = () => {
   const [value, setValue] = React.useState(0)
@@ -12,7 +13,7 @@ const DeliveryOrderPage = () => {
   const [date, setDate] = useState("")
   const [customerCode, setCustomerCode] = useState("")
   const [salesManCode, setSalesManCode] = useState("")
-  const [poNumber, setpoNumber] = useState("")
+  const [poNumber, setPoNumber] = useState("")
   const [orderBy, setOrderBy] = useState("")
   const [vehicleNumber, setVehicleNumber] = useState("")
   const [contact, setContact] = useState("")
@@ -37,213 +38,232 @@ const DeliveryOrderPage = () => {
 
   return (
     <>
-    <div style={{marginLeft: "40%", }}>
-            <Paper square>
-                <Tabs
-                    value={value}
-                    textColor="primary"
-                    indicatorColor="primary"
-                    onChange={(event, newValue) => {
-                        setValue(newValue);
-                    }}
-                >
-                    <Tab label="General" />
-                    <Tab label="Details" />
-                    <Tab label="Delivery Address" />
-                </Tabs>
-                {/* <h3>TAB NO: {value} clicked!</h3> */}
-            </Paper>
+    <div>
+        <Paper square>
+            <Tabs
+                value={value}
+                textColor="primary"
+                indicatorColor="primary"
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                }}
+            >
+                <Tab label="General" />
+                <Tab label="Details" />
+                <Tab label="Delivery Address" />
+            </Tabs>
+        </Paper>
     </div>
 
     {value === 0 && (
         <div>
-          <fieldset>
           <form>
-            <label>
-              Delivery Order No.  
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={deliveryOrderNumber}
-              onChange={(e) => setDeliveryOrderNumber(e.target.value)}
-            />
-            <label>
-              Date 
-            </label>
-            <input
-              type="date"
-              placeholder=""
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-            <label>
-              Customer Code 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={customerCode}
-              onChange={(e) => setCustomerCode(e.target.value)}
-            />
-            <label>
-              Salesman Code 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={salesManCode}
-              onChange={(e) => setSalesManCode(e.target.value)}
-            />
-            <label>
-              P/O Number 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={poNumber}
-              onChange={(e) => setpoNumber(e.target.value)}
-            />
-            <label>
-              Order By 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
-            />
-            <label>
-              Vehicle Number 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={vehicleNumber}
-              onChange={(e) => setVehicleNumber(e.target.value)}
-            />
-            <label>
-              Contact 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-            />
-            <label>
-              Terms 
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={terms}
-              onChange={(e) => setTerms(e.target.value)}
-            />
-            <label>
-              Rate
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={rate}
-              onChange={(e) => setRate(e.target.value)}
-            />
-            <label>
-              Gross Total
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={grossTotal}
-              onChange={(e) => setGrossTotal(e.target.value)}
-            />
-            <label>
-              Disc
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={disc}
-              onChange={(e) => setDisc(e.target.value)}
-            />
-            <label>
-              Sub-total
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={subTotal}
-              onChange={(e) => setSubTotal(e.target.value)}
-            />
-            <label>
-              Tax
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={tax}
-              onChange={(e) => setTax(e.target.value)}
-            />
-            <label>
-              Absorb Tax
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={absorbTax}
-              onChange={(e) => setAbsorbTax(e.target.value)}
-            />
-            <label>
-              GST
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={gst}
-              onChange={(e) => setGst(e.target.value)}
-            />
-            <label>
-              Nett Total
-            </label>
-            <input
-              type="text"
-              placeholder=""
-              value={netTotal}
-              onChange={(e) => setNetTotal(e.target.value)}
-            />
+            <div className="form-container">
+              {/* Left Column */}
+              <div>
+                <div className="input-container">
+                  <label>Delivery Order No.</label>
+                  <input
+                    type="text"
+                    value={deliveryOrderNumber}
+                    onChange={(e) => setDeliveryOrderNumber(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Customer Code</label>
+                  <input
+                    type="text"
+                    value={customerCode}
+                    onChange={(e) => setCustomerCode(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Salesman Code</label>
+                  <input
+                    type="text"
+                    value={salesManCode}
+                    onChange={(e) => setSalesManCode(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>P/O Number</label>
+                  <input
+                    type="text"
+                    value={poNumber}
+                    onChange={(e) => setPoNumber(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Order By</label>
+                  <input
+                    type="text"
+                    value={orderBy}
+                    onChange={(e) => setOrderBy(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Vehicle Number</label>
+                  <input
+                    type="text"
+                    value={vehicleNumber}
+                    onChange={(e) => setVehicleNumber(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Contact</label>
+                  <input
+                    type="text"
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Terms</label>
+                  <input
+                    type="text"
+                    value={terms}
+                    onChange={(e) => setTerms(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div>
+                <div className="input-container">
+                  <label>Rate</label>
+                  <input
+                    type="text"
+                    value={rate}
+                    onChange={(e) => setRate(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Gross Total</label>
+                  <input
+                    type="text"
+                    value={grossTotal}
+                    onChange={(e) => setGrossTotal(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Disc</label>
+                  <input
+                    type="text"
+                    value={disc}
+                    onChange={(e) => setDisc(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Sub-total</label>
+                  <input
+                    type="text"
+                    value={subTotal}
+                    onChange={(e) => setSubTotal(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Tax</label>
+                  <input
+                    type="text"
+                    value={tax}
+                    onChange={(e) => setTax(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Absorb Tax</label>
+                  <input
+                    type="text"
+                    value={absorbTax}
+                    onChange={(e) => setAbsorbTax(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>GST</label>
+                  <input
+                    type="text"
+                    value={gst}
+                    onChange={(e) => setGst(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-container">
+                  <label>Net Total</label>
+                  <input
+                    type="text"
+                    value={netTotal}
+                    onChange={(e) => setNetTotal(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
           </form>
-          </fieldset>
         </div>
       )}
 
       {value === 1 && (
         <div>
           <form>
-            <input
-              type="text"
-              placeholder="Company Name"
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Telephone"
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Fax"
-              value={fax}
-              onChange={(e) => setFax(e.target.value)}
-            />
+            <div className="input-container">
+              <label>Company Name</label>
+              <input
+                type="text"
+                placeholder=""
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+            </div>
+
+            <div className="input-container">
+              <label>Address</label>
+              <input
+                type="text"
+                placeholder=""
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            </div>
+
+            <div className="input-container">
+              <label>Telephone</label>
+              <input
+                type="text"
+                placeholder=""
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
+              />
+            </div>
+
+            <div className="input-container">
+              <label>Fax</label>
+              <input
+                type="text"
+                placeholder=""
+                value={fax}
+                onChange={(e) => setFax(e.target.value)}
+              />
+            </div>
           </form>
         </div>
       )}
@@ -251,23 +271,25 @@ const DeliveryOrderPage = () => {
       {value === 2 && (
         <div>
           <form>
-            <textarea
-              placeholder="Enter Delivery Address"
-              value={deliveryAddress}
-              onChange={(e) => setDeliveryAddress(e.target.value)}
-            />
+            <div className="input-container">
+              <label>Delivery Address</label>
+              <input
+                type="text"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+              />
+            </div>
           </form>
         </div>
       )}
 
-    <div>This is the Delivery Order Page!</div>
     <button className="delivery-order-button">
             <Link to="/" className="button-link">
             Main Page
             </Link>
     </button>
     </>
-  )
+  );
 }
 
-export default DeliveryOrderPage
+export default DeliveryOrderPage;
