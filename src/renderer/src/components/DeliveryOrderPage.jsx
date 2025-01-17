@@ -50,12 +50,40 @@ const DeliveryOrderPage = () => {
     })
   );
 
+  const [itemNo, setItemNo] = useState(0)
+  const [nettTotal, setNettTotal] = useState(0)
+
   const handleTableChange = (index, field, value) => {
     const updatedTableData = [...tableData];
     updatedTableData[index] = {
       ...updatedTableData[index],
       [field]: value,
     };
+
+    const { quantity, unitPrice, type } = updatedTableData[index];
+
+    if (field === "quantity" || field === "unitPrice" || field === "type") {
+      if (type === "PCS") {
+        // If Type is PCS, calculate Amount
+        const amount = (quantity || 0) * (unitPrice || 0);
+        updatedTableData[index].amount = amount.toFixed(2); // Keep two decimal places
+      } else {
+        // If Type is not PCS, reset Amount (or handle differently if needed)
+        updatedTableData[index].amount = "";
+      }
+    }
+
+    const nonBlankAmounts = updatedTableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").length;
+    
+    setItemNo(nonBlankAmounts);
+
+    const total = updatedTableData.reduce((sum, row) => {
+      const amount = parseFloat(row.amount) || 0;
+      return sum + amount;
+    }, 0);
+
+    setNettTotal(total.toFixed(2));
+
     setTableData(updatedTableData);
   };
 
@@ -364,6 +392,7 @@ const DeliveryOrderPage = () => {
                     type="number"
                     value={row.amount}
                     onChange={(e) => handleTableChange(index, "amount", e.target.value)}
+                    readOnly
                   />
                 </td>
               </tr>
@@ -371,6 +400,19 @@ const DeliveryOrderPage = () => {
           </tbody>
         </table>
       </div>
+      <div className="totals-container">
+        <div className="totals-row">
+          <div className="total-item">
+            <span className="label">Total Item:</span>
+            <span className="value-special">{itemNo}</span>
+          </div>
+          <div className="nett-total">
+            <span className="label">Nett Total:</span>
+            <span className="value">${nettTotal}</span>
+          </div>
+        </div>
+      </div>
+
     </>
   );
 };

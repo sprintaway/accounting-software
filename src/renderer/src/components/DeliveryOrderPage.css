@@ -89,3 +89,47 @@
     text-align: right;
   }
   
+
+  .totals-container {
+    background-color: #f9f9f9;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically center the items */
+    font-size: 18px;
+  }
+  
+  .total-item,
+  .nett-total {
+    display: flex;
+    align-items: center;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #333;
+    margin-right: 2px;
+  }
+  
+  .value-special {
+    font-size: 20px;
+    color: #007bff;
+    font-weight: bold;
+    margin-right: 100px;
+  }
+
+  .value {
+    font-size: 20px;
+    color: #007bff;
+    font-weight: bold;
+  }
+  
+  
