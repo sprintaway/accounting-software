@@ -53,28 +53,82 @@ const DeliveryOrderPage = () => {
   const [itemNo, setItemNo] = useState(0)
   const [nettTotal, setNettTotal] = useState(0)
 
+  const calculateTonQuantity = (description) => {
+    if (!description || !description.length1 || !description.length2 || !description.width || !description.depth) {
+      return "";
+    }
+    
+    const length1 = parseFloat(description.length1) || 0;
+    const length2 = parseFloat(description.length2) || 0;
+    const width = parseFloat(description.width) || 0;
+    const depth = parseFloat(description.depth) || 0;
+    
+    const result = (length1 * length2 * width * depth) / 7200;
+    return result.toFixed(4); // Return with 4 decimal places
+  };
+
+  const calculateAmount = (quantity, unitPrice, type) => {
+    if (!quantity || !unitPrice) return "";
+    const amount = parseFloat(quantity) * parseFloat(unitPrice);
+    return amount.toFixed(2);
+  };
+
   const handleTableChange = (index, field, value) => {
     const updatedTableData = [...tableData];
-    updatedTableData[index] = {
-      ...updatedTableData[index],
-      [field]: value,
-    };
+    
+    if (field === "description" && updatedTableData[index].type === "TON") {
+      // For TON type, merge the new value with existing description values
+      const updatedDescription = {
+        ...updatedTableData[index].description || {},  // Preserve existing values
+        ...value  // Merge new value
+      };
+      
+      updatedTableData[index] = {
+        ...updatedTableData[index],
+        description: updatedDescription
+      };
+      
+      // Calculate and update quantity for TON type
+      const calculatedQuantity = calculateTonQuantity(updatedDescription);
+      updatedTableData[index].quantity = calculatedQuantity;
+
+      if (updatedTableData[index].unitPrice) {
+        updatedTableData[index].amount = calculateAmount(
+          calculatedQuantity,
+          updatedTableData[index].unitPrice,
+          updatedTableData[index].type
+        );
+      }
+    } else {
+      // For other fields, update normally
+      updatedTableData[index] = {
+        ...updatedTableData[index],
+        [field]: value,
+      };
+    }
 
     const { quantity, unitPrice, type } = updatedTableData[index];
 
     if (field === "quantity" || field === "unitPrice" || field === "type") {
-      if (type === "PCS") {
-        // If Type is PCS, calculate Amount
-        const amount = (quantity || 0) * (unitPrice || 0);
-        updatedTableData[index].amount = amount.toFixed(2); // Keep two decimal places
+      if (type === "PCS" || type === "TON") {
+        updatedTableData[index].amount = calculateAmount(quantity, unitPrice, type);
       } else {
-        // If Type is not PCS, reset Amount (or handle differently if needed)
         updatedTableData[index].amount = "";
       }
     }
 
+    if (field === "type" && value === "TON") {
+      // Initialize description object with empty values when switching to TON
+      updatedTableData[index].description = {
+        length1: "",
+        length2: "",
+        width: "",
+        depth: ""
+      };
+      updatedTableData[index].quantity = "";
+    }
+
     const nonBlankAmounts = updatedTableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").length;
-    
     setItemNo(nonBlankAmounts);
 
     const total = updatedTableData.reduce((sum, row) => {
@@ -83,10 +137,10 @@ const DeliveryOrderPage = () => {
     }, 0);
 
     setNettTotal(total.toFixed(2));
-
     setTableData(updatedTableData);
   };
 
+  
   return (
     <>
       <div>
@@ -346,17 +400,59 @@ const DeliveryOrderPage = () => {
                 </select>
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    value={row.description}
-                    onChange={(e) => handleTableChange(index, "description", e.target.value)}
-                  />
-                </td>
+          {row.type === "TON" ? (
+            <div style={{ display: "flex", gap: "4px" }}>
+              <input
+                type="text"
+                placeholder=""
+                value={row.description.length1 || ""}
+                onChange={(e) =>
+                  handleTableChange(index, "description", { length1: e.target.value })
+                }
+              />
+              <span>"X</span>
+              <input
+                type="text"
+                placeholder=""
+                value={row.description.length2 || ""}
+                onChange={(e) =>
+                  handleTableChange(index, "description", { length2: e.target.value })
+                }
+              />
+              <span>"-</span>
+              <input
+                type="text"
+                placeholder=""
+                value={row.description.width || ""}
+                onChange={(e) =>
+                  handleTableChange(index, "description", { width: e.target.value })
+                }
+              />
+              <span>/</span>
+              <input
+                type="text"
+                placeholder=""
+                value={row.description.depth || ""}
+                onChange={(e) =>
+                  handleTableChange(index, "description", { depth: e.target.value })
+                }
+              />
+              <span>'</span>
+            </div>
+          ) : (
+            <input
+              type="text"
+              value={row.description}
+              onChange={(e) => handleTableChange(index, "description", e.target.value)}
+            />
+          )}
+        </td>
                 <td>
                   <input
                     type="number"
                     value={row.quantity}
                     onChange={(e) => handleTableChange(index, "quantity", e.target.value)}
+                    readOnly={row.type === "TON"}
                   />
                 </td>
                 {/* <td>
@@ -398,7 +494,7 @@ const DeliveryOrderPage = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>  
       </div>
       <div className="totals-container">
         <div className="totals-row">
