@@ -144,9 +144,11 @@ code {
 }
 
 .delivery-order-button {
+  position: fixed;
+  top: 0px;
+  right: 0px;
   display: inline-block;
-  margin: 100px;
-  padding: 0px; /* Remove default button padding */
+  padding: 10px 10px; /* Remove default button padding */
   text-align: center;
   border: none; /* Remove default border */
   background: none; /* Remove default background */

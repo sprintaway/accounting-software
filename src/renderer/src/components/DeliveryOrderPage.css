@@ -3,28 +3,89 @@
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two equal-width columns */
     gap: 20px; /* Add space between the two columns */
-    padding: 20px;
+    padding: 10px;
   }
   
   .input-container {
-    clear: both;
+    display: flex;
+    align-items: center; /* Vertically center the label and input */
+    gap: 10px; /* Space between the label and input */
   }
   
   .input-container label {
-    display: block;
-    width: 150px; 
+    width: 150px; /* Fixed width for the label */
     text-align: left;
-    margin-bottom: 5px;
   }
   
   .input-container input {
-    width: 100%; /* Input will take up the entire column width */
-    padding: 8px;
-    box-sizing: border-box;
+    width: calc(100% - 160px); /* Take up the remaining space minus label width */
+    padding: 4px;
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
   }
   
   form {
     display: grid;
-    gap: 20px;
+    gap: 0px;
+  }
+  
+
+
+  /* Apply styles to the form elements */
+.form-container-2 {
+    padding: 10px;
+  }
+  
+.input-container-2 {
+  display: flex;
+  align-items: center; /* Vertically center the label and input */
+  gap: 10px; /* Space between the label and input */
+}
+  
+  .input-container-2 label {
+    width: 150px; /* Fixed width for the label */
+    text-align: left;
+  }
+  
+  .input-container-2 input {
+    width: calc(100% - 160px); /* Input will take up the remaining space */
+    padding: 4px;
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+  }
+
+
+  /* Style the table */
+.editable-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .editable-table td {
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  .editable-table th {
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  .editable-table input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .editable-table select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .editable-table input[type="number"] {
+    text-align: right;
   }
   
