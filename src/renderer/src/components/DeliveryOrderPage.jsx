@@ -67,6 +67,18 @@ const DeliveryOrderPage = () => {
     return result.toFixed(4); // Return with 4 decimal places
   };
 
+  const calculateFeetInchQuantity = (description) => {
+    if (!description || !description.width || !description.depth) {
+      return "";
+    }
+    
+    const width = parseFloat(description.width) || 0;
+    const depth = parseFloat(description.depth) || 0;
+    
+    const result = width * depth;
+    return result.toFixed(4);
+  };
+
   const calculateAmount = (quantity, unitPrice, type) => {
     if (!quantity || !unitPrice) return "";
     const amount = parseFloat(quantity) * parseFloat(unitPrice);
@@ -76,11 +88,10 @@ const DeliveryOrderPage = () => {
   const handleTableChange = (index, field, value) => {
     const updatedTableData = [...tableData];
     
-    if (field === "description" && updatedTableData[index].type === "TON") {
-      // For TON type, merge the new value with existing description values
+    if (field === "description" && (updatedTableData[index].type === "TON" || updatedTableData[index].type === "FEET/INCH")) {
       const updatedDescription = {
-        ...updatedTableData[index].description || {},  // Preserve existing values
-        ...value  // Merge new value
+        ...updatedTableData[index].description || {},
+        ...value
       };
       
       updatedTableData[index] = {
@@ -88,10 +99,17 @@ const DeliveryOrderPage = () => {
         description: updatedDescription
       };
       
-      // Calculate and update quantity for TON type
-      const calculatedQuantity = calculateTonQuantity(updatedDescription);
+      // Calculate quantity based on type
+      let calculatedQuantity = "";
+      if (updatedTableData[index].type === "TON") {
+        calculatedQuantity = calculateTonQuantity(updatedDescription);
+      } else if (updatedTableData[index].type === "FEET/INCH") {
+        calculatedQuantity = calculateFeetInchQuantity(updatedDescription);
+      }
+      
       updatedTableData[index].quantity = calculatedQuantity;
-
+      
+      // Calculate amount if unit price exists
       if (updatedTableData[index].unitPrice) {
         updatedTableData[index].amount = calculateAmount(
           calculatedQuantity,
@@ -100,7 +118,6 @@ const DeliveryOrderPage = () => {
         );
       }
     } else {
-      // For other fields, update normally
       updatedTableData[index] = {
         ...updatedTableData[index],
         [field]: value,
@@ -109,23 +126,30 @@ const DeliveryOrderPage = () => {
 
     const { quantity, unitPrice, type } = updatedTableData[index];
 
+    // Calculate amount when quantity or unit price changes
     if (field === "quantity" || field === "unitPrice" || field === "type") {
-      if (type === "PCS" || type === "TON") {
+      if (type === "PCS" || type === "TON" || type === "FEET/INCH") {
         updatedTableData[index].amount = calculateAmount(quantity, unitPrice, type);
       } else {
         updatedTableData[index].amount = "";
       }
     }
 
-    if (field === "type" && value === "TON") {
-      // Initialize description object with empty values when switching to TON
-      updatedTableData[index].description = {
-        length1: "",
-        length2: "",
-        width: "",
-        depth: ""
-      };
-      updatedTableData[index].quantity = "";
+    if (field === "type") {
+      if (value === "TON" || value === "FEET/INCH") {
+        // Initialize description object with empty values
+        updatedTableData[index].description = {
+          length1: "",
+          length2: "",
+          width: "",
+          depth: ""
+        };
+        updatedTableData[index].quantity = "";
+        updatedTableData[index].amount = "";
+      } else {
+        // Reset description to empty string for other types
+        updatedTableData[index].description = "";
+      }
     }
 
     const nonBlankAmounts = updatedTableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").length;
@@ -400,52 +424,93 @@ const DeliveryOrderPage = () => {
                 </select>
                 </td>
                 <td>
-          {row.type === "TON" ? (
-            <div style={{ display: "flex", gap: "4px" }}>
-              <input
-                type="text"
-                placeholder=""
-                value={row.description.length1 || ""}
-                onChange={(e) =>
-                  handleTableChange(index, "description", { length1: e.target.value })
-                }
-              />
-              <span>"X</span>
-              <input
-                type="text"
-                placeholder=""
-                value={row.description.length2 || ""}
-                onChange={(e) =>
-                  handleTableChange(index, "description", { length2: e.target.value })
-                }
-              />
-              <span>"-</span>
-              <input
-                type="text"
-                placeholder=""
-                value={row.description.width || ""}
-                onChange={(e) =>
-                  handleTableChange(index, "description", { width: e.target.value })
-                }
-              />
-              <span>/</span>
-              <input
-                type="text"
-                placeholder=""
-                value={row.description.depth || ""}
-                onChange={(e) =>
-                  handleTableChange(index, "description", { depth: e.target.value })
-                }
-              />
-              <span>'</span>
-            </div>
-          ) : (
-            <input
-              type="text"
-              value={row.description}
-              onChange={(e) => handleTableChange(index, "description", e.target.value)}
-            />
-          )}
+                {(row.type === "TON") ? (
+                    <div style={{ display: "flex", gap: "4px" }}>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.length1 || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { length1: e.target.value })
+                        }
+                      />
+                      <span>"X</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.length2 || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { length2: e.target.value })
+                        }
+                      />
+                      <span>"-</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.width || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { width: e.target.value })
+                        }
+                      />
+                      <span>/</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.depth || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { depth: e.target.value })
+                        }
+                      />
+                      <span>'</span>
+                    </div>
+                  ) : 
+                  (row.type === "FEET/INCH") ? 
+                  <div style={{ display: "flex", gap: "4px" }}>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.length1 || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { length1: e.target.value })
+                        }
+                      />
+                      <span>"X</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.length2 || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { length2: e.target.value })
+                        }
+                      />
+                      <span>"-</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.width || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { width: e.target.value })
+                        }
+                      />
+                      <span>PCS/</span>
+                      <input
+                        type="text"
+                        placeholder=""
+                        value={row.description?.depth || ""}
+                        onChange={(e) =>
+                          handleTableChange(index, "description", { depth: e.target.value })
+                        }
+                      />
+                      <span>'</span>
+                    </div>
+
+                  : (
+                    <input
+                      type="text"
+                      value={row.description}
+                      onChange={(e) => handleTableChange(index, "description", e.target.value)}
+                    />
+                  )}
         </td>
                 <td>
                   <input
@@ -504,7 +569,7 @@ const DeliveryOrderPage = () => {
           </div>
           <div className="nett-total">
             <span className="label">Nett Total:</span>
-            <span className="value">${nettTotal}</span>
+            <span className="value">${(nettTotal * 1.09).toFixed(2)}</span>
           </div>
         </div>
       </div>
