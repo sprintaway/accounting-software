@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import fs from 'fs'
 
 function createWindow() {
   // Create the browser window.
@@ -33,6 +34,57 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+
+  ipcMain.on('print-document', (event, content) => {
+    const win = BrowserWindow.getFocusedWindow()
+    
+    if (win) {
+      // Create a temporary window to generate PDF
+      let previewWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        show: false,
+        webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false
+        }
+      })
+  
+      // Load the content into the temporary window
+      previewWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(content)}`)
+  
+      previewWindow.webContents.on('did-finish-load', () => {
+        // Generate a path for the temporary PDF
+        const pdfPath = join(app.getPath('temp'), 'print-preview.pdf')
+  
+        // Print to PDF
+        previewWindow.webContents.printToPDF({
+          marginsType: 0,
+          printBackground: true,
+          printSelectionOnly: false,
+          landscape: false
+        }).then(data => {
+          // Write PDF to file
+          fs.writeFile(pdfPath, data, (error) => {
+            if (error) {
+              dialog.showErrorBox('PDF Error', error.message)
+              return
+            }
+            
+            // Open the PDF
+            shell.openPath(pdfPath)
+          })
+  
+          // Close the temporary window
+          previewWindow.close()
+          previewWindow = null
+        }).catch(error => {
+          dialog.showErrorBox('Print to PDF Error', error.message)
+        })
+      })
+    }
+  })
 }
 
 // This method will be called when Electron has finished

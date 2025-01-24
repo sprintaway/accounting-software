@@ -2,9 +2,8 @@ import MainPage from './components/MainPage'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import DeliveryOrderPage from './components/DeliveryOrderPage'
 
-function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
+function App() {
   return (
     <>
     <Router>

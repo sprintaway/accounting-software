@@ -1,12 +1,267 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import './DeliveryOrderPage.css'; // Importing a CSS file for styles.
 
+
+
 const DeliveryOrderPage = () => {
-  const [value, setValue] = useState(0);
+
+  const handlePrint = () => {
+    const printContent = `
+      <html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+      }
+      h1, h3, h5, h6 {
+        margin: 0; /* Removes all margin */
+        padding: 0; /* Removes all padding */
+      }
+      h6 {
+        font-weight: normal
+      }
+      .bold {
+        font-weight: bold
+      }
+      .two-columns {
+        display: flex;
+        justify-content: space-between; /* Ensure two columns are spaced evenly */
+        margin: 20px; /* Add spacing around the container */
+        padding: 0 20px; /* Add padding for visual balance */
+      }
+      .left-column, .right-column {
+        flex: 1; /* Both columns take up equal space */
+        text-align: left; /* Align text to the left in both columns */
+      }
+      .right-column {
+        padding-left: 20px; /* Add a small gap between columns */
+      }
+      table {
+        display: table;
+        width: 100%; /* Use full width */
+        border-collapse: collapse; /* Remove extra space between table cells */
+        table-layout: fixed;
+      }
+      th {
+        padding: 8px;
+        text-align: center; /* Center-align table content */
+      }
+      th {
+        border: 1px solid #000; /* Add border to cells */
+        background-color: #f2f2f2; /* Add background color to header */
+        font-weight: bold; /* Make headers bold */
+        font-size: 0.6em;
+      }
+      td {
+        padding: 5px 10px; /* Add vertical spacing */
+        vertical-align: top; /* Align content at the top */
+        text-align: left;
+        font-size: 0.6em;
+      }
+      tr {
+        text-align: left;
+      }
+      .label {
+        text-align: left; /* Align labels to the left */
+        width: 100px; /* Consistent width for labels */
+        font-size: 0.6em; /* Match h5 size */
+        font-weight: bold; /* Match h5 weight */
+      }
+      .separator {
+        text-align: center; /* Align separators to the center */
+        width: 10px; /* Small width for semicolon column */
+        font-size: 0.6em; /* Match h5 size */
+        font-weight: bold; /* Match h5 weight */
+      }
+      .value {
+        text-align: left; /* Align values to the left */
+        font-size: 0.6em; /* Match h5 size */
+        font-weight: bold; /* Match h5 weight */
+      }
+      .description {
+        width: 50%; /* 3 parts */
+      }
+      .pcs-tons, .unit-price, .amount {
+        width: 16.67%; /* 1 part each */
+      }
+      .table-wrapper {
+        height: 300px; /* Fixed height */
+        overflow: auto; /* Adds scrollbars if the content exceeds the height */
+        margin-top: 20px; /* Space between the content above and the table */
+      }
+      .footer {
+        position: absolute;
+        bottom: 65px;
+        right: 20px;
+        padding: 5px;
+        background-color: #f2f2f2;
+        border: 1px solid #000;
+        font-size: 1.2em;
+        width: 200px;
+        text-align: right;
+      }
+      .footer div {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .footer .label {
+        text-align: left;
+      }
+      .footer .value {
+        text-align: right;
+      }
+
+      .bottom-left {
+        position: absolute;
+        bottom: 1px;
+        left: 1px;
+        font-size: 0.7em;
+        text-align: left;
+        width: 300px;
+      }
+
+      /* Bottom right signature line */
+      .bottom-right {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        font-size: 0.7em;
+        text-align: center;
+        width: 200px;
+      }
+      .signature-line {
+        border-top: 1px solid #000;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>S.K.K. ENTERPRISE PTE LTD</h1>
+    <h6>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h6>
+    <h6> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h6>
+    <h6> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h6>
+    <p></p>
+    <div class="two-columns">
+      <div class="left-column">
+        <h5> BILL TO:</h5>
+        <h5> ${companyName}</h5>
+        <h5> 30 KRANJI LOOP,</h5>
+        <h5> TIMMAC@KRANJI, #03-06</h5>
+        <h5> SINGAPORE 739570.</h5>
+        <h5> SELF COLLECTION</h5>
+
+        <h5> DELIVER TO:</h5>
+        <h5> C/O: EASTERN UNION</h5>
+      </div>
+      <div class="right-column">
+        <h5>CO. REG NO: 199608803E</h5>
+        <h5>GST REG NO: 19-9608803-E</h5>
+        <p></p>
+        <h3>DELIVERY ORDER</h3>
+        <p></p>
+        <table>
+          <tr>
+            <td class="label">D/O NO.</td>
+            <td class="separator">:</td>
+            <td class="value">${deliveryOrderNumber}</td>
+          </tr>
+          <tr>
+            <td class="label">D/O DATE</td>
+            <td class="separator">:</td>
+            <td class="value">${date}</td>
+          </tr>
+          <tr>
+            <td class="label">P.O. NO.</td>
+            <td class="separator">:</td>
+            <td class="value">${poNumber}</td>
+          </tr>
+          <tr>
+            <td class="label">ORDER BY</td>
+            <td class="separator">:</td>
+            <td class="value">${orderBy}</td>
+          </tr>
+          <tr>
+            <td class="label">TERMS</td>
+            <td class="separator">:</td>
+            <td class="value">${terms}</td>
+          </tr>
+          <tr>
+            <td class="label">VEHICLE NO.</td>
+            <td class="separator">:</td>
+            <td class="value">${vehicleNumber}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Table wrapped in the fixed-height block -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="description">DESCRIPTION</th>
+            <th class="pcs-tons">PCS/TONS</th>
+            <th class="unit-price">UNIT PRICE ($)</th>
+            <th class="amount">AMOUNT ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="description">CHENGAL (PLANED)<br>12" X 3" - 3/20'</td>
+            <td class="pcs-tons">3 PCS</td>
+            <td class="unit-price">600.00</td>
+            <td class="amount">1,800.00</td>
+          </tr>
+          <tr>
+            <td class="description">CHENGAL (PLANED)<br>95MM X 44MM X - 8 PCS/10'</td>
+            <td class="pcs-tons">8 PCS</td>
+            <td class="unit-price">55.75</td>
+            <td class="amount">446.00</td>
+          </tr>
+          <tr>
+            <td class="description"></td>
+            <td class="pcs-tons"></td>
+            <td class="unit-price"></td>
+            <td class="amount"></td>
+          </tr>
+          <!-- More rows can go here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <div><span class="label bold">Sub-total</span><span class="value">2,246.00</span></div>
+      <div><span class="label bold">GST 9%</span><span class="value">202.14</span></div>
+      <div><span class="label bold">Total</span><span class="value">2,448.14</span></div>
+    </div>
+
+    <div class="bottom-left">
+      <p>INTEREST 1% PER MONTH WILL BE CHARGED ON OVERDUE ACCOUNT.
+      CHEQUE SHOULD BE CROSSED & MADE PAYABLE TO "S.K.K ENTERPRISE PTE LTD."</p>
+    </div>
+
+    <div class="bottom-right">
+      <div class="signature-line"></div>
+      <p>S.K.K. ENTERPRISE PTE LTD</p>
+    </div>
+  </body>
+</html>`
+
+
+    // Send the printable content to the main process
+    window.electron.ipcRenderer.send('print-document', printContent)
+  }
+
+  const [value, setValue] = useState(0);  
 
   // Under General Tab
   const [deliveryOrderNumber, setDeliveryOrderNumber] = useState("");
@@ -29,7 +284,7 @@ const DeliveryOrderPage = () => {
 
   // Under Details Tab
   const [companyName, setCompanyName] = useState("");
-  const [address, setAddress] = useState("");
+  const [address1, setAddress1] = useState("");
   const [telephone, setTelephone] = useState("");
   const [fax, setFax] = useState("");
 
@@ -167,6 +422,13 @@ const DeliveryOrderPage = () => {
   
   return (
     <>
+    <div className="delivery-order-page">
+    <div>
+    <button 
+        onClick={handlePrint}>
+        Print Delivery Order
+    </button>
+    </div>
       <div>
         <Paper square>
           <Tabs
@@ -573,6 +835,8 @@ const DeliveryOrderPage = () => {
           </div>
         </div>
       </div>
+  
+    </div>
 
     </>
   );

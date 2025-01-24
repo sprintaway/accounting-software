@@ -133,3 +133,10 @@
   }
   
   
+  .delivery-order-page {
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: flex;
+    flex-direction: column; /* Ensure proper layout for column content */
+  }
+  
