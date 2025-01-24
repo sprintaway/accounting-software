@@ -7,7 +7,7 @@ import './DeliveryOrderPage.css'; // Importing a CSS file for styles.
 
 
 
-const DeliveryOrderPage = () => {
+const TaxInvoicePage = () => {
 
   const handlePrint = () => {
     const printContent = `
@@ -120,15 +120,6 @@ const DeliveryOrderPage = () => {
 
       .bottom-left {
         position: absolute;
-        bottom: 100px;
-        left: 10px;
-        font-size: 0.7em;
-        text-align: left;
-        width: 300px;
-      }
-
-      .absolute-bottom-left {
-        position: absolute;
         bottom: 1px;
         left: 1px;
         font-size: 0.7em;
@@ -218,34 +209,50 @@ const DeliveryOrderPage = () => {
         <thead>
           <tr>
             <th class="description">DESCRIPTION</th>
+            <th class="pcs-tons">PCS/TONS</th>
+            <th class="unit-price">UNIT PRICE ($)</th>
+            <th class="amount">AMOUNT ($)</th>
           </tr>
         </thead>
         <tbody>
-        ${tableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").map(row => `
           <tr>
-            <td class="description">${row.type === "TON" || row.type === "FEET/INCH" 
-              ? `${row.description?.length1 || ''}" X ${row.description?.length2 || ''}" - ${row.description?.width || ''} / ${row.description?.depth || ''}'`
-              : row.description}</td>
+            <td class="description">CHENGAL (PLANED)<br>12" X 3" - 3/20'</td>
+            <td class="pcs-tons">3 PCS</td>
+            <td class="unit-price">600.00</td>
+            <td class="amount">1,800.00</td>
           </tr>
-        `).join('')}
+          <tr>
+            <td class="description">CHENGAL (PLANED)<br>95MM X 44MM X - 8 PCS/10'</td>
+            <td class="pcs-tons">8 PCS</td>
+            <td class="unit-price">55.75</td>
+            <td class="amount">446.00</td>
+          </tr>
+          <tr>
+            <td class="description"></td>
+            <td class="pcs-tons"></td>
+            <td class="unit-price"></td>
+            <td class="amount"></td>
+          </tr>
+          <!-- More rows can go here -->
         </tbody>
       </table>
     </div>
 
-    <div class="bottom-left">
-      <p>Received the above in good order and condition</p>
+    <div class="footer">
+      <div><span class="label bold">Sub-total</span><span class="value">2,246.00</span></div>
+      <div><span class="label bold">GST 9%</span><span class="value">202.14</span></div>
+      <div><span class="label bold">Total</span><span class="value">2,448.14</span></div>
     </div>
 
-    <div class="absolute-bottom-left">
-      <div class="signature-line"></div>
-      <p>COMPANY STAMP & RECEIVER'S SIGNATURE</p>
+    <div class="bottom-left">
+      <p>INTEREST 1% PER MONTH WILL BE CHARGED ON OVERDUE ACCOUNT.
+      CHEQUE SHOULD BE CROSSED & MADE PAYABLE TO "S.K.K ENTERPRISE PTE LTD."</p>
     </div>
 
     <div class="bottom-right">
       <div class="signature-line"></div>
       <p>S.K.K. ENTERPRISE PTE LTD</p>
     </div>
-
   </body>
 </html>`
 
@@ -612,7 +619,6 @@ const DeliveryOrderPage = () => {
               />
             </div>
             <div className="input-container-2">
-            <label></label>
               <input
                 type="text"
                 value={address2}
@@ -620,7 +626,6 @@ const DeliveryOrderPage = () => {
               />
             </div>
             <div className="input-container-2">
-            <label></label>
               <input
                 type="text"
                 value={address3}
@@ -628,7 +633,6 @@ const DeliveryOrderPage = () => {
               />
             </div>
             <div className="input-container-2">
-            <label></label>
               <input
                 type="text"
                 value={address4}
@@ -862,4 +866,4 @@ const DeliveryOrderPage = () => {
   );
 };
 
-export default DeliveryOrderPage;
+export default TaxInvoicePage;
