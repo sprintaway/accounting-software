@@ -19,9 +19,12 @@ const DeliveryOrderPage = () => {
         padding: 0;
         text-align: center;
       }
-      h1, h3, h5, h6 {
+      h1, h3, h4, h5, h6 {
         margin: 0; /* Removes all margin */
         padding: 0; /* Removes all padding */
+      }
+      h5 {
+        font-weight: normal
       }
       h6 {
         font-weight: normal
@@ -56,13 +59,13 @@ const DeliveryOrderPage = () => {
         border: 1px solid #000; /* Add border to cells */
         background-color: #f2f2f2; /* Add background color to header */
         font-weight: bold; /* Make headers bold */
-        font-size: 0.6em;
+        font-size: 1em;
       }
       td {
         padding: 5px 10px; /* Add vertical spacing */
         vertical-align: top; /* Align content at the top */
         text-align: left;
-        font-size: 0.6em;
+        font-size: 1em;
       }
       tr {
         text-align: left;
@@ -70,18 +73,18 @@ const DeliveryOrderPage = () => {
       .label {
         text-align: left; /* Align labels to the left */
         width: 100px; /* Consistent width for labels */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .separator {
         text-align: center; /* Align separators to the center */
         width: 10px; /* Small width for semicolon column */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .value {
         text-align: left; /* Align values to the left */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .description {
@@ -122,7 +125,7 @@ const DeliveryOrderPage = () => {
         position: absolute;
         bottom: 100px;
         left: 10px;
-        font-size: 0.7em;
+        font-size: 0.85em;
         text-align: left;
         width: 300px;
       }
@@ -131,7 +134,7 @@ const DeliveryOrderPage = () => {
         position: absolute;
         bottom: 1px;
         left: 1px;
-        font-size: 0.7em;
+        font-size: 0.85em;
         text-align: left;
         width: 300px;
       }
@@ -141,7 +144,7 @@ const DeliveryOrderPage = () => {
         position: absolute;
         bottom: 1px;
         right: 1px;
-        font-size: 0.7em;
+        font-size: 0.85em;
         text-align: center;
         width: 200px;
       }
@@ -155,25 +158,25 @@ const DeliveryOrderPage = () => {
   </head>
   <body>
     <h1>S.K.K. ENTERPRISE PTE LTD</h1>
-    <h6>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h6>
-    <h6> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h6>
-    <h6> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h6>
+    <h5>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h5>
+    <h5> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h5>
+    <h5> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h5>
     <p></p>
     <div class="two-columns">
       <div class="left-column">
-        <h5> BILL TO:</h5>
-        <h5> ${companyName}</h5>
-        <h5> ${address1}</h5>
-        <h5> ${address2}</h5>
-        <h5> ${address3}</h5>
-        <h5> ${address4}</h5>
-
-        <h5> DELIVER TO:</h5>
-        <h5> ${deliveryAddress}</h5>
+        <h4> BILL TO:</h4>
+        <h4> ${companyName}</h4>
+        <h4> ${address1}</h4>
+        <h4> ${address2}</h4>
+        <h4> ${address3}</h4>
+        <h4> ${address4}</h4>
+        <p></p><p></p>
+        <h4> DELIVER TO:</h4>
+        <h4> ${deliveryAddress}</h4>
       </div>
       <div class="right-column">
-        <h5>CO. REG NO: 199608803E</h5>
-        <h5>GST REG NO: 19-9608803-E</h5>
+        <h4>CO. REG NO: 199608803E</h4>
+        <h4>GST REG NO: 19-9608803-E</h4>
         <p></p>
         <h3>DELIVERY ORDER</h3>
         <p></p>
@@ -223,9 +226,14 @@ const DeliveryOrderPage = () => {
         <tbody>
         ${tableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").map(row => `
           <tr>
-            <td class="description">${row.type === "TON" || row.type === "FEET/INCH" 
-              ? `${row.description?.length1 || ''}" X ${row.description?.length2 || ''}" - ${row.description?.width || ''} / ${row.description?.depth || ''}'`
-              : row.description}</td>
+                <td class="description">
+                  ${row.name ? `<div class="description-name">${row.name}</div>` : ''}
+                  <div class="description-text">
+                    ${row.type === "TON" || row.type === "FEET/INCH" 
+                      ? `${row.description?.length1 || ''}" X ${row.description?.length2 || ''}" - ${row.description?.width || ''} / ${row.description?.depth || ''}'`
+                      : row.description}
+                  </div>
+                </td>
           </tr>
         `).join('')}
         </tbody>
@@ -291,6 +299,7 @@ const DeliveryOrderPage = () => {
   const [tableData, setTableData] = useState(
     Array(10).fill({
       type: "",
+      name: "", 
       description: "",
       quantity: "",
       uom: "",
@@ -299,6 +308,7 @@ const DeliveryOrderPage = () => {
       disc: "",
       amount: ""
     })
+
   );
 
   const [itemNo, setItemNo] = useState(0)
@@ -338,6 +348,12 @@ const DeliveryOrderPage = () => {
 
   const handleTableChange = (index, field, value) => {
     const updatedTableData = [...tableData];
+    if (field === "name") {
+      updatedTableData[index] = {
+        ...updatedTableData[index],
+        name: value
+      };
+    }
     
     if (field === "description" && (updatedTableData[index].type === "TON" || updatedTableData[index].type === "FEET/INCH")) {
       const updatedDescription = {
@@ -681,6 +697,7 @@ const DeliveryOrderPage = () => {
           <thead>
             <tr>
               <th width="110px">Type</th>
+              <th width="400px">Name</th>
               <th width="400px">Description</th>
               <th width="100px">Quantity</th>
               {/* <th width="50px">UOM</th> */}
@@ -704,6 +721,13 @@ const DeliveryOrderPage = () => {
                   <option value="PCS">PCS</option>
                   <option value=""></option>
                 </select>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={row.name}
+                    onChange={(e) => handleTableChange(index, "name", e.target.value)}
+                  />
                 </td>
                 <td>
                 {(row.type === "TON") ? (
