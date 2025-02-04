@@ -224,18 +224,35 @@ const DeliveryOrderPage = () => {
           </tr>
         </thead>
         <tbody>
-        ${tableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").map(row => `
-          <tr>
-                <td class="description">
-                  ${row.name ? `<div class="description-name">${row.name}</div>` : ''}
-                  <div class="description-text">
-                    ${row.type === "TON" || row.type === "FEET/INCH" 
-                      ? `${row.description?.length1 || ''}" X ${row.description?.length2 || ''}" - ${row.description?.width || ''} / ${row.description?.depth || ''}'`
-                      : row.description}
-                  </div>
-                </td>
-          </tr>
-        `).join('')}
+        ${groupAndSumTableData(tableData).map(group => {
+            if (group.type === "TON") {
+              return `
+                <tr>
+                  <td class="description">
+                    <div class="description-name">${group.name}</div>
+                    <div class="description-text">
+                      ${group.details.map(detail => 
+                        `${group.description.length1}" X ${group.description.length2}" - ${detail.width}/${detail.depth}'`
+                      ).join('<br>')}
+                    </div>
+                  </td>
+                </tr>
+              `;
+            } else {
+              return `
+                <tr>
+                  <td class="description">
+                    ${group.name ? `<div class="description-name">${group.name}</div>` : ''}
+                    <div class="description-text">
+                      ${typeof group.description === 'object' 
+                        ? `${group.description?.length1}" X ${group.description?.length2}" - ${group.description?.width}/${group.description?.depth}'`
+                        : group.description}
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }
+          }).join('')}
         </tbody>
       </table>
     </div>
@@ -313,6 +330,57 @@ const DeliveryOrderPage = () => {
 
   const [itemNo, setItemNo] = useState(0)
   const [nettTotal, setNettTotal] = useState(0)
+
+  const groupAndSumTableData = (tableData) => {
+    // First, filter out empty rows and group by name and dimensions
+    const groupedData = tableData
+      .filter(row => row.amount && row.amount !== "0.00" && row.amount !== "")
+      .reduce((acc, row) => {
+        if (row.type === "TON") {
+          // Create key using name and dimensions
+          const key = `${row.name}-${row.description?.length1}-${row.description?.length2}`;
+          
+          if (!acc[key]) {
+            acc[key] = {
+              name: row.name,
+              type: row.type,
+              description: {
+                length1: row.description?.length1,
+                length2: row.description?.length2,
+              },
+              details: [],
+              totalTonnage: 0,
+              unitPrice: row.unitPrice,
+              totalAmount: 0
+            };
+          }
+          
+          acc[key].details.push({
+            width: row.description?.width,
+            depth: row.description?.depth,
+            tonnage: parseFloat(row.quantity) || 0
+          });
+          
+          acc[key].totalTonnage += parseFloat(row.quantity) || 0;
+          acc[key].totalAmount += parseFloat(row.amount) || 0;
+        } else {
+          // For non-TON items, keep them as individual entries
+          const key = `individual-${Math.random()}`;
+          acc[key] = {
+            name: row.name,
+            type: row.type,
+            description: row.description,
+            quantity: row.quantity,
+            unitPrice: row.unitPrice,
+            amount: row.amount
+          };
+        }
+        
+        return acc;
+      }, {});
+  
+    return Object.values(groupedData);
+  };
 
   const calculateTonQuantity = (description) => {
     if (!description || !description.length1 || !description.length2 || !description.width || !description.depth) {
@@ -435,12 +503,7 @@ const DeliveryOrderPage = () => {
   return (
     <>
     <div className="delivery-order-page">
-    <div>
-    <button 
-        onClick={handlePrint}>
-        Print Delivery Order
-    </button>
-    </div>
+
       <div>
         <Paper square>
           <Tabs
@@ -696,15 +759,15 @@ const DeliveryOrderPage = () => {
         <table className="editable-table">
           <thead>
             <tr>
-              <th width="110px">Type</th>
-              <th width="400px">Name</th>
-              <th width="400px">Description</th>
+              <th width="90px">Type</th>
+              <th width="200px">Name</th>
+              <th width="200px">Description</th>
               <th width="100px">Quantity</th>
               {/* <th width="50px">UOM</th> */}
-              <th width="150px">Tonnage</th>
-              <th width="150px">Unit Price</th>
+              <th width="100px">Tonnage</th>
+              <th width="100px">Unit Price</th>
               <th width="80px">Disc %</th>
-              <th width="150px">Amount</th>
+              <th width="100px">Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -879,8 +942,16 @@ const DeliveryOrderPage = () => {
           </div>
         </div>
       </div>
+
+      <div>
+      <button className="print-button"
+          onClick={handlePrint}>
+          Print Delivery Order
+      </button>
+      </div>
   
     </div>
+
 
     </>
   );

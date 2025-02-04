@@ -191,6 +191,25 @@ code {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.print-button {
+  position: fixed;
+  right: 5px;
+  top: 40px;
+  width: 170px;
+  display: inline-block;
+  padding: 10px 20px; /* Increase padding for better button size */
+  text-align: center;
+  border: none; /* Remove default border */
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  font-size: 14px; /* Optional: Adjust text size */
+  border-radius: 3px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth background transition */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+
+
 
 @media (max-width: 720px) {
   .text {
