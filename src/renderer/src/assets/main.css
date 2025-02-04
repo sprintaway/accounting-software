@@ -145,8 +145,8 @@ code {
 
 .delivery-order-button {
   position: fixed;
-  top: 0px;
-  right: 0px;
+  left: 5px;
+  top: 30px;
   display: inline-block;
   padding: 10px 10px; /* Remove default button padding */
   text-align: center;
@@ -157,14 +157,40 @@ code {
 .delivery-order-button .button-link {
   text-decoration: none;
   display: block;
-  padding: 15px 30px;
+  padding: 10px 20px;
+  width: 140px;
   background-color: #4CAF50;
   color: white;
-  font-size: 18px;
-  border-radius: 5px;
+  font-size: 14px;
+  border-radius: 3px;
   transition: background-color 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.tax-invoice-button {
+  position: fixed;
+  left: 5px;
+  top: 70px;
+  display: inline-block;
+  padding: 10px 10px; /* Remove default button padding */
+  text-align: center;
+  border: none; /* Remove default border */
+  background: none; /* Remove default background */
+}
+
+.tax-invoice-button .button-link {
+  text-decoration: none;
+  display: block;
+  padding: 10px 20px;
+  width: 140px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 14px;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 
 @media (max-width: 720px) {
   .text {

@@ -19,9 +19,12 @@ const TaxInvoicePage = () => {
         padding: 0;
         text-align: center;
       }
-      h1, h3, h5, h6 {
+      h1, h3, h4, h5, h6 {
         margin: 0; /* Removes all margin */
         padding: 0; /* Removes all padding */
+      }
+      h5 {
+        font-weight: normal
       }
       h6 {
         font-weight: normal
@@ -56,13 +59,13 @@ const TaxInvoicePage = () => {
         border: 1px solid #000; /* Add border to cells */
         background-color: #f2f2f2; /* Add background color to header */
         font-weight: bold; /* Make headers bold */
-        font-size: 0.6em;
+        font-size: 1em;
       }
       td {
         padding: 5px 10px; /* Add vertical spacing */
         vertical-align: top; /* Align content at the top */
         text-align: left;
-        font-size: 0.6em;
+        font-size: 1em;
       }
       tr {
         text-align: left;
@@ -70,18 +73,18 @@ const TaxInvoicePage = () => {
       .label {
         text-align: left; /* Align labels to the left */
         width: 100px; /* Consistent width for labels */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .separator {
         text-align: center; /* Align separators to the center */
         width: 10px; /* Small width for semicolon column */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .value {
         text-align: left; /* Align values to the left */
-        font-size: 0.6em; /* Match h5 size */
+        font-size: 1em; /* Match h5 size */
         font-weight: bold; /* Match h5 weight */
       }
       .description {
@@ -102,7 +105,7 @@ const TaxInvoicePage = () => {
         padding: 5px;
         background-color: #f2f2f2;
         border: 1px solid #000;
-        font-size: 1.2em;
+        font-size: 1em;
         width: 200px;
         text-align: right;
       }
@@ -146,53 +149,53 @@ const TaxInvoicePage = () => {
   </head>
   <body>
     <h1>S.K.K. ENTERPRISE PTE LTD</h1>
-    <h6>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h6>
-    <h6> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h6>
-    <h6> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h6>
+    <h5>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h5>
+    <h5> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h5>
+    <h5> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h5>
     <p></p>
     <div class="two-columns">
       <div class="left-column">
-        <h5> BILL TO:</h5>
-        <h5> ${companyName}</h5>
-        <h5> ${address1}</h5>
-        <h5> ${address2}</h5>
-        <h5> ${address3}</h5>
-        <h5> ${address4}</h5>
-
-        <h5> DELIVER TO:</h5>
-        <h5> ${deliveryAddress}</h5>
+        <h4> BILL TO:</h4>
+        <h4> ${companyName}</h4>
+        <h4> ${address1}</h4>
+        <h4> ${address2}</h4>
+        <h4> ${address3}</h4>
+        <h4> ${address4}</h4>
+        <p></p><p></p>
+        <h4> DELIVER TO:</h4>
+        <h4> ${deliveryAddress}</h4>
       </div>
       <div class="right-column">
-        <h5>CO. REG NO: 199608803E</h5>
-        <h5>GST REG NO: 19-9608803-E</h5>
+        <h4>CO. REG NO: 199608803E</h4>
+        <h4>GST REG NO: 19-9608803-E</h4>
         <p></p>
         <h3>DELIVERY ORDER</h3>
         <p></p>
         <table>
+          <tr>
+            <td class="label">INVOICE NO.</td>
+            <td class="separator">:</td>
+            <td class="value">${deliveryOrderNumber}</td>
+          </tr>
+          <tr>
+            <td class="label">DATE</td>
+            <td class="separator">:</td>
+            <td class="value">${date}</td>
+          </tr>
           <tr>
             <td class="label">D/O NO.</td>
             <td class="separator">:</td>
             <td class="value">${deliveryOrderNumber}</td>
           </tr>
           <tr>
-            <td class="label">D/O DATE</td>
-            <td class="separator">:</td>
-            <td class="value">${date}</td>
-          </tr>
-          <tr>
-            <td class="label">P.O. NO.</td>
-            <td class="separator">:</td>
-            <td class="value">${poNumber}</td>
-          </tr>
-          <tr>
-            <td class="label">ORDER BY</td>
-            <td class="separator">:</td>
-            <td class="value">${orderBy}</td>
-          </tr>
-          <tr>
             <td class="label">TERMS</td>
             <td class="separator">:</td>
             <td class="value">${terms}</td>
+          </tr>
+          <tr>
+            <td class="label">YOUR P/O NO.</td>
+            <td class="separator">:</td>
+            <td class="value">${poNumber}</td>
           </tr>
           <tr>
             <td class="label">VEHICLE NO.</td>
@@ -215,38 +218,44 @@ const TaxInvoicePage = () => {
           </tr>
         </thead>
         <tbody>
+        ${tableData.filter(row => row.amount && row.amount !== "0.00" && row.amount !== "").map(row => `
           <tr>
-            <td class="description">CHENGAL (PLANED)<br>12" X 3" - 3/20'</td>
-            <td class="pcs-tons">3 PCS</td>
-            <td class="unit-price">600.00</td>
-            <td class="amount">1,800.00</td>
+                <td class="description">
+                  ${row.name ? `<div class="description-name">${row.name}</div>` : ''}
+                  <div class="description-text">
+                    ${row.type === "TON" || row.type === "FEET/INCH" 
+                      ? `${row.description?.length1 || ''}" X ${row.description?.length2 || ''}" - ${row.description?.width || ''} / ${row.description?.depth || ''}'`
+                      : row.description}
+                  </div>
+                </td>
+                <td class="pcs-tons">
+                  ${row.type === "TON" 
+                    ? `${row.quantity} TON`
+                    : row.type === "FEET/INCH"
+                      ? `${row.quantity}`
+                      : `${row.quantity} PCS`} 
+                </td> 
+                <td class="unit-price">
+                  ${(parseFloat(row.unitPrice) || 0).toFixed(2)}
+                </td>
+                <td class="amount">
+                  ${row.amount}
+                </td>
           </tr>
-          <tr>
-            <td class="description">CHENGAL (PLANED)<br>95MM X 44MM X - 8 PCS/10'</td>
-            <td class="pcs-tons">8 PCS</td>
-            <td class="unit-price">55.75</td>
-            <td class="amount">446.00</td>
-          </tr>
-          <tr>
-            <td class="description"></td>
-            <td class="pcs-tons"></td>
-            <td class="unit-price"></td>
-            <td class="amount"></td>
-          </tr>
-          <!-- More rows can go here -->
+        `).join('')}
         </tbody>
       </table>
     </div>
 
     <div class="footer">
-      <div><span class="label bold">Sub-total</span><span class="value">2,246.00</span></div>
-      <div><span class="label bold">GST 9%</span><span class="value">202.14</span></div>
-      <div><span class="label bold">Total</span><span class="value">2,448.14</span></div>
+      <div><span class="label bold">Sub-total</span><span class="value">${nettTotal}</span></div>
+      <div><span class="label bold">GST 9%</span><span class="value">${(nettTotal * 0.09).toFixed(2)}</span></div>
+      <div><span class="label bold">Total</span><span class="value">${(nettTotal * 1.09).toFixed(2)}</span></div>
     </div>
 
     <div class="bottom-left">
       <p>INTEREST 1% PER MONTH WILL BE CHARGED ON OVERDUE ACCOUNT.
-      CHEQUE SHOULD BE CROSSED & MADE PAYABLE TO "S.K.K ENTERPRISE PTE LTD."</p>
+      CHEQUE SHOULD BE CROSSED & MADE PAYABLE TO <strong>"S.K.K ENTERPRISE PTE LTD."</strong></p>
     </div>
 
     <div class="bottom-right">
@@ -298,6 +307,7 @@ const TaxInvoicePage = () => {
   const [tableData, setTableData] = useState(
     Array(10).fill({
       type: "",
+      name: "", 
       description: "",
       quantity: "",
       uom: "",
@@ -345,6 +355,12 @@ const TaxInvoicePage = () => {
 
   const handleTableChange = (index, field, value) => {
     const updatedTableData = [...tableData];
+    if (field === "name") {
+      updatedTableData[index] = {
+        ...updatedTableData[index],
+        name: value
+      };
+    }
     
     if (field === "description" && (updatedTableData[index].type === "TON" || updatedTableData[index].type === "FEET/INCH")) {
       const updatedDescription = {
@@ -429,7 +445,7 @@ const TaxInvoicePage = () => {
     <div>
     <button 
         onClick={handlePrint}>
-        Print Delivery Order
+        Print Tax Invoice
     </button>
     </div>
       <div>
@@ -454,7 +470,7 @@ const TaxInvoicePage = () => {
               {/* Left Column */}
               <div>
                 <div className="input-container">
-                  <label>Delivery Order No.</label>
+                  <label>Invoice No.</label>
                   <input
                     type="text"
                     value={deliveryOrderNumber}
@@ -619,6 +635,7 @@ const TaxInvoicePage = () => {
               />
             </div>
             <div className="input-container-2">
+            <label></label>
               <input
                 type="text"
                 value={address2}
@@ -626,6 +643,7 @@ const TaxInvoicePage = () => {
               />
             </div>
             <div className="input-container-2">
+            <label></label>
               <input
                 type="text"
                 value={address3}
@@ -633,6 +651,7 @@ const TaxInvoicePage = () => {
               />
             </div>
             <div className="input-container-2">
+            <label></label>
               <input
                 type="text"
                 value={address4}
@@ -685,6 +704,7 @@ const TaxInvoicePage = () => {
           <thead>
             <tr>
               <th width="110px">Type</th>
+              <th width="400px">Name</th>
               <th width="400px">Description</th>
               <th width="100px">Quantity</th>
               {/* <th width="50px">UOM</th> */}
@@ -708,6 +728,13 @@ const TaxInvoicePage = () => {
                   <option value="PCS">PCS</option>
                   <option value=""></option>
                 </select>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={row.name}
+                    onChange={(e) => handleTableChange(index, "name", e.target.value)}
+                  />
                 </td>
                 <td>
                 {(row.type === "TON") ? (

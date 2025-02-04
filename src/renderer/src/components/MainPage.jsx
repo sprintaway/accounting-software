@@ -12,6 +12,11 @@ const MainPage = () => {
         Delivery Order
         </Link>
     </button>
+    <button className="tax-invoice-button">
+        <Link to="/tax-invoice" className="button-link">
+        Tax Invoice
+        </Link>
+    </button>
     </>
   )
 }
