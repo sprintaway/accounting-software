@@ -4,16 +4,52 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import './DeliveryOrderPage.css'; // Importing a CSS file for styles.
+import companyLogo from '../assets/company-logo.png'
 
 
 
 const TaxInvoicePage = () => {
 
   const handlePrint = () => {
+
+    const img = new Image()
+        img.src = companyLogo
+        
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        
+        img.onload = () => {
+          canvas.width = img.width
+          canvas.height = img.height
+          ctx.drawImage(img, 0, 0)
+          const base64Logo = canvas.toDataURL('image/png')
+
     const printContent = `
       <html>
   <head>
     <style>
+      .company-header {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        text-align: center;
+        width: 100%;
+      }
+
+      .logo-container {
+        margin-right: 20px; /* Adjust spacing as needed */
+      }
+
+      .company-logo {
+        max-width: 100px; /* Adjust logo size */
+        height: auto;
+      }
+
+      .company-info {
+        display: flex;
+        flex-direction: column;
+      }
+
       body {
         margin: 0;
         padding: 0;
@@ -148,10 +184,17 @@ const TaxInvoicePage = () => {
     </style>
   </head>
   <body>
-    <h1>S.K.K. ENTERPRISE PTE LTD</h1>
-    <h5>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h5>
-    <h5> TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h5>
-    <h5> SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h5>
+  <div class="company-header">
+    <div class="logo-container">
+      <img src="${base64Logo}" class="company-logo" alt="Company Logo">
+    </div>
+    <div class="company-info">
+      <h1>S.K.K. ENTERPRISE PTE LTD</h1>
+      <h6>49 • SUNGEI KADUT STREET 4, SINGAPORE 729063</h6>
+      <h6>TEL: 6363 3298 / 6362 3523 FAX: 6269 0681</h6>
+      <h6>SUPPLIER OF SAWN TIMBER, PLYWOOD, PLANNING SERVICES & CHEMICAL TREATMENT</h6>
+    </div>
+  </div>
     <p></p>
     <div class="two-columns">
       <div class="left-column">
@@ -169,7 +212,7 @@ const TaxInvoicePage = () => {
         <h4>CO. REG NO: 199608803E</h4>
         <h4>GST REG NO: 19-9608803-E</h4>
         <p></p>
-        <h3>DELIVERY ORDER</h3>
+        <h3>TAX INVOICE</h3>
         <p></p>
         <table>
           <tr>
@@ -283,6 +326,7 @@ const TaxInvoicePage = () => {
     // Send the printable content to the main process
     window.electron.ipcRenderer.send('print-document', printContent)
   }
+}
 
   const [value, setValue] = useState(0);  
 
@@ -946,7 +990,7 @@ const TaxInvoicePage = () => {
           </div>
         </div>
       </div>
-  
+            
       <div>
       <button className="print-button"
           onClick={handlePrint}>

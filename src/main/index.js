@@ -40,8 +40,7 @@ function createWindow() {
     const win = BrowserWindow.getFocusedWindow()
     
     if (win) {
-      // Create a temporary window to generate PDF
-      let previewWindow = new BrowserWindow({
+      const previewWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
@@ -51,34 +50,28 @@ function createWindow() {
         }
       })
   
-      // Load the content into the temporary window
       previewWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(content)}`)
   
       previewWindow.webContents.on('did-finish-load', () => {
-        // Generate a path for the temporary PDF
         const pdfPath = join(app.getPath('temp'), 'print-preview.pdf')
   
-        // Print to PDF
         previewWindow.webContents.printToPDF({
           marginsType: 0,
           printBackground: true,
           printSelectionOnly: false,
-          landscape: false
+          landscape: false,
+          pageSize: 'A4'
         }).then(data => {
-          // Write PDF to file
           fs.writeFile(pdfPath, data, (error) => {
             if (error) {
               dialog.showErrorBox('PDF Error', error.message)
               return
             }
             
-            // Open the PDF
             shell.openPath(pdfPath)
           })
   
-          // Close the temporary window
           previewWindow.close()
-          previewWindow = null
         }).catch(error => {
           dialog.showErrorBox('Print to PDF Error', error.message)
         })
